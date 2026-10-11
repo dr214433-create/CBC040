@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Multi-Article AI Classification System</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='chatbot.css') }}">
+
+    <script src="{{ url_for('static', filename='script.js') }}" defer></script>
+    <script src="{{ url_for('static', filename='chatbot.js') }}" defer></script>
+</head>
+
+<body>
+<header class="main-header">
+    <div class="header-content">
+        <span class="eyebrow">SMART NLP WORKSPACE</span>
+        <h1>Article Intelligence Hub</h1>
+        <p>Classify multiple news articles in one place with smart category insights.</p>
+    </div>
+</header>
+
+<main class="dashboard">
+
+    <section class="welcome-banner">
+        <div>
+            <h2>Your Article Workspace</h2>
+            <p>Add multiple articles, classify them individually, and compare the results.</p>
+        </div>
+        <div class="workspace-icon">✦</div>
+    </section>
+
+    <section class="stats-grid">
+        <div class="stat-card">
+            <span>Total Articles</span>
+            <strong id="totalCount">0</strong>
+        </div>
+        <div class="stat-card">
+            <span>Classified</span>
+            <strong id="classifiedCount">0</strong>
+        </div>
+        <div class="stat-card">
+            <span>Pending</span>
+            <strong id="pendingCount">0</strong>
+        </div>
+        <div class="stat-card">
+            <span>Categories Found</span>
+            <strong id="categoryCount">0</strong>
+        </div>
+    </section>
+
+    <section class="workspace-section">
+        <div class="section-heading">
+            <div>
+                <span class="eyebrow">STEP 01</span>
+                <h2>Add Your Articles</h2>
+                <p>Each article will receive its own classification result.</p>
+            </div>
+            <button id="addArticleBtn" class="secondary-btn" type="button">
+                + Add Article
+            </button>
+        </div>
+
+        <div id="articleList">
+            <article class="article-input-card">
+                <div class="article-card-heading">
+                    <h3>Article 1</h3>
+                    <span class="article-state">Ready to classify</span>
+                </div>
+
+                <input
+                    class="article-title"
+                    type="text"
+                    placeholder="Article title (optional)"
+                    aria-label="Article 1 title"
+                >
+
+                <textarea
+                    class="article-text"
+                    placeholder="Paste the full news article or research text here..."
+                    aria-label="Article 1 content"
+                    rows="7"
+                ></textarea>
+
+                <div class="article-card-footer">
+                    <span class="word-count">0 words</span>
+                    <button class="remove-article-btn" type="button" disabled>
+                        Remove
+                    </button>
+                </div>
+            </article>
+        </div>
+
+        <div class="main-actions">
+            <button id="classifyAllBtn" class="primary-btn" type="button">
+                ✦ Classify All Articles
+            </button>
+            <button id="clearAllBtn" class="clear-btn" type="button">
+                Clear All
+            </button>
+        </div>
+
+        <p id="status" role="status" aria-live="polite"></p>
+    </section>
+
+    <section class="workspace-section">
+        <div class="section-heading">
+            <div>
+                <span class="eyebrow">STEP 02</span>
+                <h2>Classification Results</h2>
+                <p>Review each prediction and compare the categories.</p>
+            </div>
+        </div>
+
+        <div id="resultSummary" class="result-summary hidden">
+            <h3>Classification Overview</h3>
+            <p id="summaryText"></p>
+            <div id="categoryBreakdown" class="category-breakdown"></div>
+        </div>
+
+        <div id="resultsList" class="results-grid">
+            <div class="empty-state">
+                <div class="empty-icon">▤</div>
+                <h3>Your results will appear here</h3>
+                <p>Add articles above and click “Classify All Articles”.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="workspace-section">
+        <div class="section-heading">
+            <div>
+                <span class="eyebrow">SUPPORTED TOPICS</span>
+                <h2>Available Categories</h2>
+            </div>
+        </div>
+
+        <div class="category-list">
+            <div class="topic-card"><span>💻</span><strong>Technology</strong></div>
+            <div class="topic-card"><span>🩺</span><strong>Healthcare</strong></div>
+            <div class="topic-card"><span>📚</span><strong>Education</strong></div>
+            <div class="topic-card"><span>📈</span><strong>Business</strong></div>
+            <div class="topic-card"><span>🏛️</span><strong>Politics</strong></div>
+            <div class="topic-card"><span>🔬</span><strong>Science</strong></div>
+        </div>
+    </section>
+
+    <section class="workspace-section about-section">
+        <h2>How It Works</h2>
+        <p>
+            The system sends each article to the existing Flask classification
+            endpoint. It then displays the predicted category and any confidence
+            or explanation returned by the backend.
+        </p>
+        <p>
+            Predictions depend on the classification method used by your backend.
+            A predicted category does not establish whether an article is true.
+        </p>
+    </section>
+</main>
+
+<footer>
+    <p>Article Intelligence Hub · Multi-Article NLP Classification</p>
+</footer>
+
+<!-- NewsBuddy chatbot: existing element IDs are preserved -->
+<button id="chatToggle" type="button" aria-label="Open NewsBuddy AI chatbot">
+    💬 Ask NewsBuddy
+</button>
+
+<div id="chatPanel">
+    <div id="chatHeader">
+        <span>🤖 NewsBuddy AI</span>
+        <button id="chatClose" type="button" aria-label="Close chatbot">×</button>
+    </div>
+
+    <div id="chatMessages" aria-live="polite" aria-label="Chat messages"></div>
+
+    <div id="chatControls">
+        <button id="voiceInputBtn" type="button">🎤 Speak</button>
+        <button id="voiceOutputBtn" type="button">🔊 Voice: On</button>
+        <button id="stopVoiceBtn" type="button">⏹ Stop voice</button>
+    </div>
+
+    <form id="chatForm">
+        <input
+            id="chatInput"
+            type="text"
+            placeholder="Ask me anything..."
+            maxlength="4000"
+            autocomplete="off"
+            aria-label="Message NewsBuddy"
+            required
+        >
+        <button id="chatSendBtn" type="submit">Send</button>
+    </form>
+
+    <div id="chatStatus" role="status">Ready</div>
+</div>
+
+</body>
+</html>
